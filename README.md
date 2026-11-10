@@ -30,3 +30,10 @@ The trade-off: the phase is global to the thread, not to a logger object. If two
 - Nested `with` blocks restore the outer phase on exit, including when the inner block raises.
 - Threads do not share phases. A phase set in one thread is invisible to another thread's records.
 - Records logged outside any block get `record.phase = None` so a `%(phase)s` format string does not raise.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
